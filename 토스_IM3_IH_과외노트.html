@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>토스 IM3~IH 과외노트</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --primary: #3b5bdb;
+      --primary-soft: #edf2ff;
+      --text: #1e2430;
+      --muted: #667085;
+      --border: #e4e7ec;
+      --ok: #12b76a;
+      --warn: #f79009;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      padding-bottom: 56px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2b4acb, #4c6ef5);
+      color: #ffffff;
+      padding: 20px 18px;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 13px;
+      opacity: 0.92;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .dday-bar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+    }
+
+    .dday-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tab-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(59, 91, 219, 0.22);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .template-box {
+      background: #f8f9fc;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .en {
+      font-weight: 700;
+      color: #101828;
+      margin-bottom: 4px;
+    }
+
+    .ko {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tip {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 13px;
+      color: #78350f;
+      margin-top: 8px;
+    }
+
+    .timer-display {
+      font-size: 34px;
+      font-weight: 800;
+      text-align: center;
+      margin: 12px 0;
+      font-variant-numeric: tabular-nums;
+      color: #101828;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button.action {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--primary);
+      color: #ffffff;
+      transition: transform 0.1s ease, opacity 0.15s ease;
+    }
+
+    button.action:active {
+      transform: scale(0.98);
+    }
+
+    button.secondary {
+      background: #eef2f6;
+      color: var(--text);
+    }
+
+    button.danger {
+      background: #fee4e2;
+      color: #b42318;
+    }
+
+    input[type="time"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .notice-box {
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: #f8f9fc;
+      color: var(--text);
+    }
+
+    .notice-box.warn {
+      background: #fffaeb;
+      border-color: #fedf89;
+      color: #93370d;
+    }
+
+    .notice-box.ok {
+      background: #ecfdf3;
+      border-color: #abefc6;
+      color: #067647;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>토익스피킹 IM3~IH 과외노트</h1>
+    <p>목표: 2026년 12월 19일(토) · 평일(화·수·금) 15~20분 + 주말 집중</p>
+  </header>
+
+  <div class="container">
+    <!-- 시험 D-Day 및 휴식 안내 -->
+    <div class="dday-bar">
+      <div>
+        <div class="text-xs text-[#667085]">시험일까지 남은 기간</div>
+        <div class="text-[13px] font-semibold">월·목 스터디 날은 휴식 허락!</div>
+      </div>
+      <div class="dday-num" id="ddayText">계산중...</div>
+    </div>
+
+    <!-- 메인 탭 내비게이션 -->
+    <nav class="tabs" aria-label="과외노트 탭 메뉴">
+      <button type="button" class="tab-btn active" onclick="showTab('part23', this)">파트 2·3</button>
+      <button type="button" class="tab-btn" onclick="showTab('part45', this)">파트 4·5</button>
+      <button type="button" class="tab-btn" onclick="showTab('plan', this)">주차별 틀</button>
+      <button type="button" class="tab-btn" onclick="showTab('practice', this)">타이머/녹음</button>
+    </nav>
+
+    <!-- 파트 2 & 파트 3 탭 -->
+    <section id="part23" class="card">
+      <span class="badge">PART 2 · 사진 묘사</span>
+      <h2>기본 답변 틀 (전체 → 인물/행동 → 배경/분위기)</h2>
+      <div class="template-box">
+        <div class="en">This is a picture of [장소/상황], probably taken [실내/야외]. In the center, there is a [사람/물건] who is [동작 -ing]. Next to [him/her/it], I can see [추가 요소]. Overall, it looks like a [busy/peaceful/casual] scene.</div>
+        <div class="ko">이 사진은 [장소/상황] 모습이고, 아마 [실내/야외]에서 찍힌 것 같아요. 중앙에는 [동작] 중인 [사람/물건]이 있어요. 그 옆에는 [추가 요소]가 보이네요. 전반적으로 [분위기] 장면처럼 보여요.</div>
+      </div>
+      <div class="tip">
+        <strong>꿀팁:</strong> 문법 틀릴까 봐 멈추지 말고, 확실한 현재진행형(<code>is wearing</code>, <code>is talking</code>)이나 <code>there is/are</code>만 써서 끝까지 이어가세요.
+      </div>
+
+      <hr class="my-4 border-0 border-t border-[#e4e7ec]" />
+
+      <span class="badge">PART 3 · 질문 응답 (멘붕 방지용)</span>
+      <h2>기본 답변 틀 (질문 못 알아들어도 버티는 2문장 공식)</h2>
+      <div class="template-box">
+        <div class="en"><strong>[1문장 핵심]</strong> Well, for me, I usually [동사원형 ~] because it helps me save time and stay focused.</div>
+        <div class="ko">음, 저의 경우 보통 [~]하는 편인데, 시간을 아끼고 집중력을 유지하는 데 도움이 되기 때문이에요.</div>
+      </div>
+      <div class="template-box">
+        <div class="en"><strong>[2문장 예시]</strong> For example, just last week, I [과거동사 ~], and it worked really well for me.</div>
+        <div class="ko">예를 들어 바로 지난주에 제가 [~]했는데, 저한테 꽤 잘 맞았어요.</div>
+      </div>
+      <div class="tip">
+        <strong>멘붕 대처법:</strong> 질문이 한 번에 안 들리면 <code>Well, speaking from my experience...</code>로 입을 먼저 떼고, 들린 단어 1~2개(예: <code>travel</code>, <code>meeting</code>, <code>online</code>)만 잡아서 위 문장에 끼워 넣으세요!
+      </div>
+    </section>
+
+    <!-- 파트 4 & 파트 5 탭 -->
+    <section id="part45" class="card hidden">
+      <span class="badge">PART 4 · 정보 제공 (짧아서 침묵 생기는 문제 해결)</span>
+      <h2>기본 답변 틀 (핵심 정보 + 부가 설명/주의사항 1줄 추가)</h2>
+      <div class="template-box">
+        <div class="en"><strong>[도입+핵심]</strong> According to the schedule, the [행사/일정명] will take place on [날짜/요일] at [시간] in [장소].</div>
+        <div class="ko">일정에 따르면 [행사명]은 [날짜/요일] [시간]에 [장소]에서 열릴 예정입니다.</div>
+      </div>
+      <div class="template-box">
+        <div class="en"><strong>[추가 정보+살붙이기]</strong> Also, please note that [특이사항/준비물/변경사항]. If you have any questions, you should contact [담당자/연락처] before [기한].</div>
+        <div class="ko">또한 [특이사항]을 참고해 주세요. 문의 사항이 있다면 [기한] 전에 [담당자/연락처]로 연락하셔야 합니다.</div>
+      </div>
+      <div class="tip">
+        <strong>침묵 방지 핵심:</strong> 표에 나온 숫자·날짜·장소만 읽고 끝내지 말고, 마지막에 <code>Please keep that in mind so you don't miss anything.</code> 같은 마무리 멘트 한 줄을 붙여 공백을 채우세요.
+      </div>
+
+      <hr class="my-4 border-0 border-t border-[#e4e7ec]" />
+
+      <span class="badge">PART 5 · 의견 제시</span>
+      <h2>기본 답변 틀 (입장 선언 → 이유 → 구체적 경험)</h2>
+      <div class="template-box">
+        <div class="en">I strongly agree that [의견]. First of all, [이유 1]. In addition, [이유 2]. From my personal experience, when I [경험], I realized how important it is. That is why I support this idea.</div>
+        <div class="ko">[의견]에 강하게 동의합니다. 우선 [이유 1] 때문입니다. 게다가 [이유 2]도 있습니다. 제 개인적인 경험상 제가 [경험]했을 때 얼마나 중요한지 깨달았어요. 그래서 이 의견에 찬성합니다.</div>
+      </div>
+    </section>
+
+    <!-- 주차별 기본 틀 탭 -->
+    <section id="plan" class="card hidden">
+      <span class="badge">3.5주 로드맵</span>
+      <h2>주차별 공부 기본 틀</h2>
+      <ul>
+        <li><strong>1주차 (11/27~11/29):</strong> 파트 2·4 기본 틀 소리 내어 읽기. 화·수·금 15분만 발화 연습, 월·목은 쉬기.</li>
+        <li><strong>2주차 (11/30~12/6):</strong> 파트 3 '1문장 핵심 + 1문장 예시' 틀 고정. 문법 교정 욕심 버리고 끝까지 말하기.</li>
+        <li><strong>3주차 (12/7~12/13):</strong> 파트 4에 부가 멘트 붙여 침묵 없애기 + 파트 5 찬반/선택 틀로 60초 채우기.</li>
+        <li><strong>4주차 (12/14~12/19):</strong> 주말 실전 타이머 연습 + 새 표현 암기 중단 + 입에 붙은 문장만 깔끔하게 다듬기.</li>
+      </ul>
+    </section>
+
+    <!-- 타이머 / 녹음 / 알람 탭 -->
+    <section id="practice" class="card hidden">
+      <span class="badge">실전 연습 & 알람</span>
+      <h2>말하기 타이머</h2>
+      <div class="btn-row">
+        <button type="button" class="secondary action" onclick="setTimer(15)">15초(답변1)</button>
+        <button type="button" class="secondary action" onclick="setTimer(30)">30초(답변2)</button>
+        <button type="button" class="secondary action" onclick="setTimer(45)">45초(파트2·4)</button>
+        <button type="button" class="secondary action" onclick="setTimer(60)">60초(파트5)</button>
+      </div>
+      <div class="timer-display" id="timerDisplay">00:45</div>
+      <div class="btn-row">
+        <button type="button" class="action" onclick="startTimer()">시작</button>
+        <button type="button" class="secondary action" onclick="pauseTimer()">일시정지</button>
+        <button type="button" class="danger action" onclick="resetTimer()">초기화</button>
+      </div>
+      <div id="timerMessage" class="notice-box hidden"></div>
+
+      <hr class="my-4 border-0 border-t border-[#e4e7ec]" />
+
+      <h2>내 목소리 녹음 체크</h2>
+      <div class="btn-row">
+        <button type="button" class="action" id="recBtn" onclick="toggleRecord()">녹음 시작</button>
+      </div>
+      <div id="recStatus" class="notice-box hidden"></div>
+      <audio id="audioPlayer" controls class="w-full mt-3 hidden"></audio>
+
+      <hr class="my-4 border-0 border-t border-[#e4e7ec]" />
+
+      <h2>평일 공부 알람 (페이지 켜둔 상태 기준)</h2>
+      <div class="btn-row items-center">
+        <input type="time" id="alarmTime" value="22:15" aria-label="공부 알람 시간" />
+        <button type="button" class="action" onclick="setAlarm()">알람 설정</button>
+        <button type="button" class="secondary action" onclick="clearAlarm()">해제</button>
+      </div>
+      <p id="alarmStatus" class="text-[13px] text-[#667085] mt-2">
+        알람 미설정 (아이폰 기본 시계 앱 알람 병행 추천)
+      </p>
+      <div id="alarmBanner" class="notice-box warn hidden"></div>
+    </section>
+  </div>
+
+  <script>
+    // 시험일까지 D-Day 계산 (목표일: 2026년 12월 19일)
+    function updateDday() {
+      try {
+        const examDate = new Date(2026, 11, 19);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const diffDays = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
+        const el = document.getElementById('ddayText');
+        if (!el) return;
+
+        if (diffDays > 0) {
+          el.textContent = `D-${diffDays}`;
+        } else if (diffDays === 0) {
+          el.textContent = 'D-Day';
+        } else {
+          el.textContent = '시험 완료';
+        }
+      } catch (err) {
+        console.error('D-Day 계산 오류:', err);
+      }
+    }
+
+    // 탭 전환 로직
+    function showTab(id, btn) {
+      try {
+        document.querySelectorAll('section.card').forEach((section) => {
+          section.classList.add('hidden');
+        });
+        const target = document.getElementById(id);
+        if (target) {
+          target.classList.remove('hidden');
+        }
+        document.querySelectorAll('.tab-btn').forEach((tab) => {
+          tab.classList.remove('active');
+        });
+        if (btn) {
+          btn.classList.add('active');
+        }
+      } catch (err) {
+        console.error('탭 전환 오류:', err);
+      }
+    }
+
+    // 말하기 타이머 상태 및 제어 함수
+    let totalSec = 45;
+    let remainSec = 45;
+    let intervalId = null;
+
+    function showTimerMessage(msg, type = 'ok') {
+      const box = document.getElementById('timerMessage');
+      if (!box) return;
+      box.textContent = msg;
+      box.className = `notice-box ${type}`;
+      box.classList.remove('hidden');
+    }
+
+    function hideTimerMessage() {
+      const box = document.getElementById('timerMessage');
+      if (!box) return;
+      box.classList.add('hidden');
+    }
+
+    function renderTimer() {
+      const display = document.getElementById('timerDisplay');
+      if (!display) return;
+      const m = String(Math.floor(remainSec / 60)).padStart(2, '0');
+      const s = String(remainSec % 60).padStart(2, '0');
+      display.textContent = `${m}:${s}`;
+    }
+
+    function setTimer(sec) {
+      pauseTimer();
+      hideTimerMessage();
+      totalSec = sec;
+      remainSec = sec;
+      renderTimer();
+    }
+
+    function startTimer() {
+      if (intervalId || remainSec <= 0) return;
+      hideTimerMessage();
+      intervalId = setInterval(() => {
+        remainSec--;
+        renderTimer();
+        if (remainSec <= 0) {
+          pauseTimer();
+          showTimerMessage('시간 종료! 녹음했다면 방금 말한 내용을 한 번만 들어보세요.', 'ok');
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      hideTimerMessage();
+      remainSec = totalSec;
+      renderTimer();
+    }
+
+    // 마이크 녹음 및 재생 제어
+    let mediaRecorder = null;
+    let chunks = [];
+    let audioStream = null;
+    let previousObjectUrl = null;
+
+    function showRecStatus(msg, type = 'ok') {
+      const box = document.getElementById('recStatus');
+      if (!box) return;
+      box.textContent = msg;
+      box.className = `notice-box ${type}`;
+      box.classList.remove('hidden');
+    }
+
+    async function toggleRecord() {
+      const btn = document.getElementById('recBtn');
+      const player = document.getElementById('audioPlayer');
+      if (!btn || !player) return;
+
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        try {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showRecStatus('현재 브라우저 환경에서 마이크 녹음을 지원하지 않습니다. 기본 음성 메모 앱을 함께 활용해 보세요.', 'warn');
+            return;
+          }
+
+          audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          chunks = [];
+
+          // 사파리/크롬 호환 mimeType 선택
+          const options = {};
+          if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported) {
+            if (MediaRecorder.isTypeSupported('audio/mp4')) {
+              options.mimeType = 'audio/mp4';
+            } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+              options.mimeType = 'audio/webm';
+            }
+          }
+
+          mediaRecorder = new MediaRecorder(audioStream, options);
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) {
+              chunks.push(e.data);
+            }
+          };
+
+          mediaRecorder.onstop = () => {
+            try {
+              if (previousObjectUrl) {
+                URL.revokeObjectURL(previousObjectUrl);
+              }
+              const mimeType = mediaRecorder.mimeType || 'audio/mp4';
+              const blob = new Blob(chunks, { type: mimeType });
+              const url = URL.createObjectURL(blob);
+              previousObjectUrl = url;
+              player.src = url;
+              player.classList.remove('hidden');
+              showRecStatus('녹음이 완료되었습니다. 아래 재생바로 내 발음을 확인해 보세요.', 'ok');
+            } catch (blobErr) {
+              showRecStatus('녹음 파일을 재생할 수 없습니다. 다시 시도해 주세요.', 'warn');
+            } finally {
+              if (audioStream) {
+                audioStream.getTracks().forEach((track) => track.stop());
+                audioStream = null;
+              }
+            }
+          };
+
+          mediaRecorder.start();
+          btn.textContent = '녹음 중지';
+          btn.classList.add('danger');
+          showRecStatus('녹음 중입니다... 편하게 소리 내어 말해 보세요!', 'ok');
+        } catch (err) {
+          showRecStatus('마이크 권한을 허용해 주세요. 권한이 차단된 경우 브라우저 설정에서 마이크를 켜주세요.', 'warn');
+        }
+      } else {
+        try {
+          mediaRecorder.stop();
+        } catch (stopErr) {
+          console.error('녹음 중지 오류:', stopErr);
+        }
+        btn.textContent = '녹음 시작';
+        btn.classList.remove('danger');
+      }
+    }
+
+    // 페이지 열림 기준 알람
+    let alarmTarget = null;
+    let lastTriggeredKey = null;
+
+    function setAlarm() {
+      const input = document.getElementById('alarmTime');
+      const statusEl = document.getElementById('alarmStatus');
+      const bannerEl = document.getElementById('alarmBanner');
+      if (!input || !statusEl) return;
+
+      alarmTarget = input.value;
+      lastTriggeredKey = null;
+      statusEl.textContent = `매일 ${alarmTarget} 알람 설정됨 (화면 켜둔 상태 기준)`;
+      if (bannerEl) {
+        bannerEl.className = 'notice-box ok';
+        bannerEl.textContent = `${alarmTarget} 알람이 설정되었습니다. 화면을 켜둔 상태로 유지해 주세요.`;
+        bannerEl.classList.remove('hidden');
+      }
+    }
+
+    function clearAlarm() {
+      alarmTarget = null;
+      lastTriggeredKey = null;
+      const statusEl = document.getElementById('alarmStatus');
+      const bannerEl = document.getElementById('alarmBanner');
+      if (statusEl) {
+        statusEl.textContent = '알람 해제됨 (아이폰 기본 시계 앱 알람 병행 추천)';
+      }
+      if (bannerEl) {
+        bannerEl.classList.add('hidden');
+      }
+    }
+
+    setInterval(() => {
+      if (!alarmTarget) return;
+      const d = new Date();
+      const cur = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+      const triggerKey = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${cur}`;
+      if (cur === alarmTarget && lastTriggeredKey !== triggerKey) {
+        lastTriggeredKey = triggerKey;
+        const bannerEl = document.getElementById('alarmBanner');
+        if (bannerEl) {
+          bannerEl.className = 'notice-box warn';
+          bannerEl.textContent = '토스 공부 시간이에요! 오늘 딱 15분만 소리 내어 말해봅시다.';
+          bannerEl.classList.remove('hidden');
+        }
+      }
+    }, 1000);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateDday();
+      renderTimer();
+    });
+  </script>
+</body>
+</html>
